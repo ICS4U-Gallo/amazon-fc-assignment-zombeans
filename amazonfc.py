@@ -22,6 +22,9 @@ class Compartment:
     def __str__(self):
         return f"content: {self.content}"
 
+    def add():
+        
+
 
 class Product:
     def __init__(self, name: str, image: str, category: int):
@@ -39,16 +42,45 @@ class Product:
         self.box_size = shipping_box_size[size]
         self.packaged = True
 
-
-def ship_in():
+#Ship In
+def scan_prod_to_trolly():
+    """Create Product"""
     pass
 
 
-def ship_out(product: Product):
+def scan_prod_to_shelf():
+    """Put Product in shelf/compartment"""
+    pass
+
+#Ship Out
+def display_box_type():
+    """Display shipping box type on screen"""
     pass
 
 
-def get_product(requsted_product: str) -> Product:
+def stamp_code():
+    """Stamp barcode and address"""
+    pass
+
+def send_to_truck():
+    """Product send to truck"""
+    pass
+
+#Order Fulfillment
+def display_prod():
+    """Display product"""
+    pass
+
+def get_prod_from_shelf():
+    """Scan product out of shelf"""
+    pass
+
+def put_prod_in_bin():
+    """Place product into bin"""
+    pass
+
+def package_bin():
+    """Send bin to packaging"""
     pass
 
 
