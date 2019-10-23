@@ -40,7 +40,7 @@ class Product:
         self.image = image
         self.cat = prod_categories[category]
         self.code = code
-    
+ 
     def __str__(self):
         return f"{self.name}, {self.cat}, {self.code}"
 
@@ -103,8 +103,9 @@ def display_box_type():
     pass
 
 
-def stamp_code():
+def stamp_code(code):
     """Stamp barcode and address"""
+    print(code)
     pass
 
 
@@ -114,8 +115,9 @@ def send_to_truck():
 
 
 #Order Fulfillment
-def display_prod():
+def display_prod(product):
     """Display product"""
+    print(product)
     pass
 
 
