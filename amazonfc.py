@@ -1,8 +1,12 @@
 from typing import *
 
-prod_categories = ("automotive", "clothings", "electronics", "home and kitchen", "industrial", "sports", "tools", "toys and games")
-shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in", "24x24x24in", "oversize")
+prod_categories = ("automotive", "clothings", "electronics", 
+                   "home and kitchen", "industrial", "sports", 
+                   "tools", "toys and games")
+shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
+                     "24x24x24in", "oversize")
 distance = ("short_distance", "mid_range", "long_distance", "international")
+
 
 class Shelf:
     def __init__(self, num):
@@ -27,7 +31,7 @@ class Compartment:
         self.content.append(prod)
 
     def remove(self, prod):
-        self.content.remove(prod)    
+        self.content.remove(prod)
 
 
 class Product:
@@ -70,7 +74,7 @@ class Truck:
 
     def leave(self):
         del self
-    
+  
 
 #Ship In
 def scan_prod_to_trolly(trolly):
