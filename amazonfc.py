@@ -1,7 +1,10 @@
 from typing import *
 
-categories = ("automotive", "clothings", "electronics", "home and kitchen", "industrial", "sports", "tools", "toys and games")
-shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in", "24x24x24in", "oversize")
+categories = ("automotive", "clothings", "electronics", "home and kitchen",
+              "industrial", "sports", "tools", "toys and games")
+shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
+                     "24x24x24in", "oversize")
+
 
 class Shelf:
     def __init__(self, num):
@@ -28,11 +31,12 @@ class Product:
         self.name = name
         self.image = image
         self.cat = categories[category]
-    
+
     def __str__(self):
         return f"{self.name}, {self.cat}"
 
-    def packaging(self, explosive: bool, fragile: bool, flamable: bool, size: int):
+    def packaging(self, explosive: bool, fragile: bool, flammable: bool,
+                  size: int):
         self.explosive = explosive
         self.fragile = fragile
         self.flamable = flamable
