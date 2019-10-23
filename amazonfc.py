@@ -61,6 +61,7 @@ def display_box_type():
     """Display shipping box type on screen"""
     pass
 
+<<<<<<< HEAD
 
 def stamp_code():
     """Stamp barcode and address"""
@@ -79,6 +80,26 @@ def get_prod_from_shelf():
     """Scan product out of shelf"""
     pass
 
+=======
+
+def stamp_code():
+    """Stamp barcode and address"""
+    pass
+
+def send_to_truck():
+    """Product send to truck"""
+    pass
+
+#Order Fulfillment
+def display_prod():
+    """Display product"""
+    pass
+
+def get_prod_from_shelf():
+    """Scan product out of shelf"""
+    pass
+
+>>>>>>> d0a0a053e168704f37ab4d63ea73863c37f4e81f
 def put_prod_in_bin():
     """Place product into bin"""
     pass
