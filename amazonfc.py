@@ -1,7 +1,10 @@
 from typing import *
 
-prod_categories = ("automotive", "clothings", "electronics", "home and kitchen", "industrial", "sports", "tools", "toys and games")
-shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in", "24x24x24in", "oversize")
+prod_categories = ("automotive", "clothings", "electronics", 
+                   "home and kitchen", "industrial", "sports", 
+                   "tools", "toys and games")
+shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
+                     "24x24x24in", "oversize")
 distance = ("short_distance", "mid_range", "long_distance", "international")
 
 
@@ -27,7 +30,7 @@ class Compartment:
         self.content.append(prod)
 
     def remove(self, prod):
-        self.content.remove(prod)    
+        self.content.remove(prod)
 
 
 class Product:
@@ -36,7 +39,7 @@ class Product:
         self.image = image
         self.cat = category
         self.code = code
-    
+ 
     def __str__(self):
         return f"{self.name}, {self.cat}, {self.code}"
 
@@ -81,7 +84,7 @@ class Truck:
 
     def leave(self):
         del self
-    
+  
 
 class Request:
     prod_request = []
@@ -115,12 +118,14 @@ def scan_prod_to_shelf(product, shelf_num, comp_code):
 #Ship Out
 def display_box_type():
     """Display shipping box type on screen"""
-    box_type = input("Enter type of box")
+    box_type = int(input("Enter type of box"))
+    print(box_type)
     pass
 
 
-def stamp_code():
+def stamp_code(code):
     """Stamp barcode and address"""
+    print(code)
     pass
 
 
@@ -130,8 +135,9 @@ def send_to_truck():
 
 
 #Order Fulfillment
-def display_prod(prod):
+def display_prod(product):
     """Display product"""
+    print(product)
     pass
 
 
