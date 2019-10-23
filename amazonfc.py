@@ -4,6 +4,7 @@ prod_categories = ("automotive", "clothings", "electronics", "home and kitchen",
 shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in", "24x24x24in", "oversize")
 distance = ("short_distance", "mid_range", "long_distance", "international")
 
+
 class Shelf:
     def __init__(self, num):
         self.num = num
@@ -12,7 +13,6 @@ class Shelf:
     def get_comp(self, code: str):
         row = ord(code[0]) - 65
         column = int(code[1]) - 1
-        print(row, column)
         return self.content[row][column]
 
 
@@ -31,16 +31,16 @@ class Compartment:
 
 
 class Product:
-    def __init__(self, name: str, image: str, category: int, code: int):
+    def __init__(self, name: str, image: str, category, code: int):
         self.name = name
         self.image = image
-        self.cat = prod_categories[category]
+        self.cat = category
         self.code = code
     
     def __str__(self):
         return f"{self.name}, {self.cat}, {self.code}"
 
-    def packaging(self, explosive: bool, fragile: bool, flammable: bool,
+    def package(self, explosive: bool, fragile: bool, flammable: bool,
                   size: int):
         self.explosive = explosive
         self.fragile = fragile
@@ -50,14 +50,25 @@ class Product:
 
 
 class Cart:
+    all_carts = []
+
     def __init__(self):
         self.content = []
+        Cart.all_carts.append(self)
 
     def add(self, item):
         self.content.append(item)
 
     def remove(self, item):
         self.content.remove(item)
+
+
+class Bin(Cart):
+    def __init__(self):
+        super().__init__()
+
+    def package():
+        self.packaged = True
 
 
 class Truck:
@@ -72,12 +83,22 @@ class Truck:
         del self
     
 
+class Request:
+    prod_request = []
+    def __init__(self, location, distance, prod_name, prod_code):
+        self.loc = location
+        self.dis = distance
+        self.prod_name = prod_name
+        self.prod_code = prod_code
+        Request.prod_request.append(self)
+
+
 #Ship In
 def scan_prod_to_trolly(trolly):
     """Create Product"""
     name = input("Prod Name: ")
     image = input("image: ")
-    category = int(input("Category Number: "))
+    category = prod_categories[int(input("Category Number: "))]
     code = int(input("Prod code: "))
     product = Product(name, image, category, code)
     trolly.append(product)
@@ -109,22 +130,30 @@ def send_to_truck():
 
 
 #Order Fulfillment
-def display_prod():
+def display_prod(prod):
     """Display product"""
     pass
 
 
-def get_prod_from_shelf():
-    """Scan product out of shelf"""
-    pass
+def get_prod_request():
+    loc = input("location: ")
+    dis = distance[int(input("distance type: "))]
+    prod_name = input("prod name: ")
+    prod_code = input("prod code: ")
+    request = Request(loc, dis, prod_name, prod_code)
 
 
-def put_prod_in_bin():
-    """Place product into bin"""
-    pass
+def get_prod_from_shelf(shelf, prod_request, bins):
+    """Scan product to bin from shelf"""
+    for i in range(len(shelf)):
+        for j in range(len(shelf[i])):
+            for prod in shelf[i][j]:
+                if prod.code in prod_request:
+                    bins.add(prod)
+                    shelf[i][j].remove(prod)
 
 
-def package_bin():
+def package_bin(bins):
     """Send bin to packaging"""
     pass
 
