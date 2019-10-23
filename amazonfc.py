@@ -9,9 +9,9 @@ class Shelf:
         self.num = num
         self.content = [[Compartment() for i in range(4)] for i in range(4)]
 
-    def get_comp(self, cords: str):
-        row = ord(cords[0]) - 65
-        column = int(cords[1]) - 1
+    def get_comp(self, code: str):
+        row = ord(code[0]) - 65
+        column = int(code[1]) - 1
         print(row, column)
         return self.content[row][column]
 
@@ -40,7 +40,8 @@ class Product:
     def __str__(self):
         return f"{self.name}, {self.cat}, {self.code}"
 
-    def packaging(self, explosive: bool, fragile: bool, flamable: bool, size: int):
+    def packaging(self, explosive: bool, fragile: bool, flammable: bool,
+                  size: int):
         self.explosive = explosive
         self.fragile = fragile
         self.flamable = flamable
@@ -72,19 +73,28 @@ class Truck:
     
 
 #Ship In
-def scan_prod_to_trolly():
-    """Create Product and move to trolly"""
+def scan_prod_to_trolly(trolly):
+    """Create Product"""
+    name = input("Prod Name: ")
+    image = input("image: ")
+    category = int(input("Category Number: "))
+    code = int(input("Prod code: "))
+    product = Product(name, image, category, code)
+    trolly.append(product)
     pass
 
 
-def scan_prod_to_shelf():
-    """Put Product from trolly to shelf/compartment"""
+def scan_prod_to_shelf(product, shelf_num, comp_code):
+    """Put Product in shelf/compartment"""
+    comp = storage[shelf_num-1].get_comp(comp_code)
+    comp.add(product)
     pass
 
 
 #Ship Out
 def display_box_type():
     """Display shipping box type on screen"""
+    box_type = input("Enter type of box")
     pass
 
 
