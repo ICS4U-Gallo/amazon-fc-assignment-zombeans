@@ -69,7 +69,8 @@ def scan_prod_to_shelf(product, shelf_num, comp_code):
 #Ship Out
 def display_box_type():
     """Display shipping box type on screen"""
-    box_type = input("Enter type of box")
+    box_type = int(input("Enter type of box"))
+    print(box_type)
     pass
 
 
