@@ -11,9 +11,9 @@ class Shelf:
         self.num = num
         self.content = [[Compartment() for i in range(4)] for i in range(4)]
 
-    def get_comp(self, cords: str):
-        row = ord(cords[0]) - 65
-        column = int(cords[1]) - 1
+    def get_comp(self, code: str):
+        row = ord(code[0]) - 65
+        column = int(code[1]) - 1
         print(row, column)
         return self.content[row][column]
 
@@ -25,8 +25,8 @@ class Compartment:
     def __str__(self):
         return f"content: {self.content}"
 
-    def add():
-        
+    def add(item):
+        self.content.append(item)
 
 
 class Product:
@@ -46,63 +46,58 @@ class Product:
         self.box_size = shipping_box_size[size]
         self.packaged = True
 
+
 #Ship In
-def scan_prod_to_trolly():
+def scan_prod_to_trolly(trolly):
     """Create Product"""
+    name = input("Prod Name: ")
+    image = input("image: ")
+    category = int(input("Category Number: "))
+    code = int(input("Prod code: "))
+    product = Product(name, image, category, code)
+    trolly.append(product)
     pass
 
 
-def scan_prod_to_shelf():
+def scan_prod_to_shelf(product, shelf_num, comp_code):
     """Put Product in shelf/compartment"""
+    comp = storage[shelf_num-1].get_comp(comp_code)
+    comp.add(product)
     pass
+
 
 #Ship Out
 def display_box_type():
     """Display shipping box type on screen"""
+    box_type = input("Enter type of box")
     pass
 
-<<<<<<< HEAD
 
 def stamp_code():
     """Stamp barcode and address"""
     pass
 
+
 def send_to_truck():
     """Product send to truck"""
     pass
+
 
 #Order Fulfillment
 def display_prod():
     """Display product"""
     pass
 
-def get_prod_from_shelf():
-    """Scan product out of shelf"""
-    pass
-
-=======
-
-def stamp_code():
-    """Stamp barcode and address"""
-    pass
-
-def send_to_truck():
-    """Product send to truck"""
-    pass
-
-#Order Fulfillment
-def display_prod():
-    """Display product"""
-    pass
 
 def get_prod_from_shelf():
     """Scan product out of shelf"""
     pass
 
->>>>>>> d0a0a053e168704f37ab4d63ea73863c37f4e81f
+
 def put_prod_in_bin():
     """Place product into bin"""
     pass
+
 
 def package_bin():
     """Send bin to packaging"""
