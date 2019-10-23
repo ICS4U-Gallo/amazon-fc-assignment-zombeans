@@ -1,10 +1,8 @@
 from typing import *
 
-categories = ("automotive", "clothings", "electronics", "home and kitchen",
-              "industrial", "sports", "tools", "toys and games")
-shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
-                     "24x24x24in", "oversize")
-
+prod_categories = ("automotive", "clothings", "electronics", "home and kitchen", "industrial", "sports", "tools", "toys and games")
+shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in", "24x24x24in", "oversize")
+distance = ("short_distance", "mid_range", "long_distance", "international")
 
 class Shelf:
     def __init__(self, num):
@@ -25,18 +23,22 @@ class Compartment:
     def __str__(self):
         return f"content: {self.content}"
 
-    def add(item):
-        self.content.append(item)
+    def add(self, prod):
+        self.content.append(prod)
+
+    def remove(self, prod):
+        self.content.remove(prod)    
 
 
 class Product:
-    def __init__(self, name: str, image: str, category: int):
+    def __init__(self, name: str, image: str, category: int, code: int):
         self.name = name
         self.image = image
-        self.cat = categories[category]
-
+        self.cat = prod_categories[category]
+        self.code = code
+    
     def __str__(self):
-        return f"{self.name}, {self.cat}"
+        return f"{self.name}, {self.cat}, {self.code}"
 
     def packaging(self, explosive: bool, fragile: bool, flammable: bool,
                   size: int):
@@ -46,6 +48,29 @@ class Product:
         self.box_size = shipping_box_size[size]
         self.packaged = True
 
+
+class Cart:
+    def __init__(self):
+        self.content = []
+
+    def add(self, item):
+        self.content.append(item)
+
+    def remove(self, item):
+        self.content.remove(item)
+
+
+class Truck:
+    def __init__(self, types):
+        self.type = distance[types]
+        self.content = []
+
+    def loading(self, prod):
+        self.content.append(prod)
+
+    def leave(self):
+        del self
+    
 
 #Ship In
 def scan_prod_to_trolly(trolly):
@@ -106,3 +131,5 @@ def package_bin():
 
 
 storage = [Shelf(i+1) for i in range(8)]
+trolly = Cart()
+bins = Cart()
