@@ -44,13 +44,24 @@ class Product:
         return f"{self.name}, {self.cat}, {self.code}"
 
     def package(self, explosive: bool, fragile: bool, flammable: bool,
-                  size: int):
+                  size: str):
         self.explosive = explosive
         self.fragile = fragile
         self.flamable = flamable
-        self.box_size = shipping_box_size[size]
+        self.box_size = size
+        self.dis = self.req.dis
         self.packaged = True
 
+    def check_danger():
+        explosive = bool(input("Product explosive?(0 for no /1 for yes) "))
+        fragile = bool(input("Product fragie?(0 for no /1 for yes) "))
+        flammable = bool(input("Product flammable?(0 for no /1 for yes) "))
+        return explosive, fragile, flammable
+
+    def check_box_size():
+        size_num = int(input("Size Number"))
+        size = shipping_box_size[size_num]
+        return size
 
 class Cart:
     all_carts = []
@@ -70,8 +81,11 @@ class Bin(Cart):
     def __init__(self):
         super().__init__()
 
-    def package():
+    def package(req: Request):
+        for prod in self.content:
+            prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
+        
 
 
 class Truck:
@@ -95,24 +109,36 @@ class Request:
         self.prod_code = prod_code
         Request.prod_request.append(self)
 
+    def get_prod_id():
+        id_list = []
+        for req in prod_request:
+            id_list.append(req.prod_code)
+        return id_list
+
+    def link_prod(bins):
+        for req in Request.prod_request:
+            for prod in bins:
+                if prod.code == req.prod_code:
+                    prod.req = req
+                    break
+            
+
 
 #Ship In
 def scan_prod_to_trolly(trolly):
-    """Create Product"""
+    """Create Product and put in trolly"""
     name = input("Prod Name: ")
     image = input("image: ")
     category = prod_categories[int(input("Category Number: "))]
     code = int(input("Prod code: "))
     product = Product(name, image, category, code)
     trolly.append(product)
-    pass
 
 
 def scan_prod_to_shelf(product, shelf_num, comp_code):
     """Put Product in shelf/compartment"""
     comp = storage[shelf_num-1].get_comp(comp_code)
     comp.add(product)
-    pass
 
 
 #Ship Out
@@ -134,7 +160,14 @@ def send_to_truck():
     pass
 
 
-#Order Fulfillment
+def order_fulfillment(storage, bins):
+    get_prod_request()
+    for shelf in storage:
+        get_prod_from_shelf(shelf, Request.get_prod_id(), bins)
+    Request.link_prod(bins)
+    bins.package()
+
+
 def display_prod(product):
     """Display product"""
     print(product)
@@ -149,14 +182,14 @@ def get_prod_request():
     request = Request(loc, dis, prod_name, prod_code)
 
 
-def get_prod_from_shelf(shelf, prod_request, bins):
+def get_prod_from_shelf(shelf, prod_req_id, bins):
     """Scan product to bin from shelf"""
-    for i in range(len(shelf)):
-        for j in range(len(shelf[i])):
-            for prod in shelf[i][j]:
-                if prod.code in prod_request:
+    for i in range(len(shelf.content)):
+        for j in range(len(shelf.content[i])):
+            for prod in shelf.content[i][j]:
+                if prod.code in prod_req_id:
                     bins.add(prod)
-                    shelf[i][j].remove(prod)
+                    shelf.content[i][j].remove(prod)
 
 
 def package_bin(bins):
