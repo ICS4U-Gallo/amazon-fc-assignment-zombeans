@@ -24,7 +24,7 @@ class Compartment:
         self.content = []
 
     def __str__(self):
-        return f"content: {self.content}"
+        return "content: {}".format(self.content)
 
     def add(self, prod):
         self.content.append(prod)
@@ -41,7 +41,7 @@ class Product:
         self.code = code
  
     def __str__(self):
-        return f"{self.name}, {self.cat}, {self.code}"
+        return "{}, {}, {}".format(self.name, self.cat, self.code)
 
     def package(self, explosive: bool, fragile: bool, flammable: bool,
                   size: str):
@@ -146,7 +146,6 @@ def display_box_type():
     """Display shipping box type on screen"""
     box_type = int(input("Enter type of box"))
     print(box_type)
-    pass
 
 
 def stamp_code(code):
@@ -161,7 +160,6 @@ def send_to_truck():
 
 
 def order_fulfillment(storage, bins):
-    get_prod_request()
     for shelf in storage:
         get_prod_from_shelf(shelf, Request.get_prod_id(), bins)
     Request.link_prod(bins)
@@ -171,7 +169,6 @@ def order_fulfillment(storage, bins):
 def display_prod(product):
     """Display product"""
     print(product)
-    pass
 
 
 def get_prod_request():
@@ -190,11 +187,6 @@ def get_prod_from_shelf(shelf, prod_req_id, bins):
                 if prod.code in prod_req_id:
                     bins.add(prod)
                     shelf.content[i][j].remove(prod)
-
-
-def package_bin(bins):
-    """Send bin to packaging"""
-    pass
 
 
 storage = [Shelf(i+1) for i in range(8)]
