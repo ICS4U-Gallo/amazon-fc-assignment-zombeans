@@ -39,12 +39,12 @@ class Product:
         self.image = image
         self.cat = category
         self.code = code
- 
+
     def __str__(self):
         return "{}, {}, {}".format(self.name, self.cat, self.code)
 
     def package(self, explosive: bool, fragile: bool, flammable: bool,
-                  size: str):
+                size: str):
         self.explosive = explosive
         self.fragile = fragile
         self.flamable = flamable
@@ -62,6 +62,7 @@ class Product:
         size_num = int(input("Size Number"))
         size = shipping_box_size[size_num]
         return size
+
 
 class Cart:
     all_carts = []
@@ -85,7 +86,6 @@ class Bin(Cart):
         for prod in self.content:
             prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
-        
 
 
 class Truck:
@@ -98,12 +98,13 @@ class Truck:
 
     def leave(self):
         del self
-  
+
 
 class Request:
     prod_request = []
-    def __init__(self, location, distance, prod_name, prod_code):
-        self.loc = location
+
+    def __init__(self, address, distance, prod_name, prod_code):
+        self.loc = address
         self.dis = distance
         self.prod_name = prod_name
         self.prod_code = prod_code
@@ -121,16 +122,15 @@ class Request:
                 if prod.code == req.prod_code:
                     prod.req = req
                     break
-            
 
 
 #Ship In
 def scan_prod_to_trolly(trolly):
     """Create Product and put in trolly"""
     name = input("Prod Name: ")
-    image = input("image: ")
+    image = input("Image: ")
     category = prod_categories[int(input("Category Number: "))]
-    code = int(input("Prod code: "))
+    code = int(input("Prod Code: "))
     product = Product(name, image, category, code)
     trolly.append(product)
 
@@ -148,15 +148,16 @@ def display_box_type():
     print(box_type)
 
 
-def stamp_code(code):
+def stamp_code(barcode):
     """Stamp barcode and address"""
-    print(code)
-    pass
+    product.barcode = barcode
 
 
-def send_to_truck():
+def send_to_truck(bins, truck):
     """Product send to truck"""
-    pass
+    for product in bins.content:
+        bins.remove(product)
+        truck.add(product)
 
 
 def order_fulfillment(storage, bins):
@@ -172,10 +173,10 @@ def display_prod(product):
 
 
 def get_prod_request():
-    loc = input("location: ")
-    dis = distance[int(input("distance type: "))]
-    prod_name = input("prod name: ")
-    prod_code = input("prod code: ")
+    loc = input("Location: ")
+    dis = distance[int(input("Distance Type: "))]
+    prod_name = input("Prod Name: ")
+    prod_code = input("Prod Code: ")
     request = Request(loc, dis, prod_name, prod_code)
 
 
