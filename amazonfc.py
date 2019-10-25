@@ -1,7 +1,7 @@
 from typing import *
 
-prod_categories = ("automotive", "clothings", "electronics", 
-                   "home and kitchen", "industrial", "sports", 
+prod_categories = ("automotive", "clothings", "electronics",
+                   "home and kitchen", "industrial", "sports",
                    "tools", "toys and games")
 shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
                      "24x24x24in", "oversize")
@@ -52,6 +52,11 @@ class Product:
         self.dis = self.req.dis
         self.packaged = True
 
+    def stamp_code(self, barcode):
+        """Stamp barcode and address"""
+        self.barcode = barcode
+        self.address = self.req.address
+
     def check_danger():
         explosive = bool(input("Product explosive?(0 for no /1 for yes) "))
         fragile = bool(input("Product fragie?(0 for no /1 for yes) "))
@@ -77,6 +82,11 @@ class Cart:
     def remove(self, item):
         self.content.remove(item)
 
+    def scan_prod_to_shelf(product, shelf_num, comp_code):
+        """Put Product in shelf/compartment"""
+        comp = storage[shelf_num-1].get_comp(comp_code)
+        comp.add(product)
+
 
 class Bin(Cart):
     def __init__(self):
@@ -86,6 +96,12 @@ class Bin(Cart):
         for prod in self.content:
             prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
+
+    def send_to_truck(self, truck):
+        """Product send to truck"""
+        for product in self.content:
+            self.remove(product)
+            truck.add(product)
 
 
 class Truck:
@@ -135,29 +151,11 @@ def scan_prod_to_trolly(trolly):
     trolly.append(product)
 
 
-def scan_prod_to_shelf(product, shelf_num, comp_code):
-    """Put Product in shelf/compartment"""
-    comp = storage[shelf_num-1].get_comp(comp_code)
-    comp.add(product)
-
-
 #Ship Out
 def display_box_type():
     """Display shipping box type on screen"""
     box_type = int(input("Enter type of box"))
     print(box_type)
-
-
-def stamp_code(barcode):
-    """Stamp barcode and address"""
-    product.barcode = barcode
-
-
-def send_to_truck(bins, truck):
-    """Product send to truck"""
-    for product in bins.content:
-        bins.remove(product)
-        truck.add(product)
 
 
 def order_fulfillment(storage, bins):
