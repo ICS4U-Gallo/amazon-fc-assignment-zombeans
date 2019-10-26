@@ -39,7 +39,6 @@ def test_check_box_size():
     check_box_size = product.check_box_size()
     
 
-
 def test_can_create_cart():
     pass
 
