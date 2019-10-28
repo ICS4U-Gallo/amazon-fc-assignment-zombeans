@@ -9,45 +9,73 @@ distance = ("short_distance", "mid_range", "long_distance", "international")
 
 
 class Shelf:
-    def __init__(self, num):
+    """Shelf class
+    Attributes:
+        num(int): Shelf number
+        content(List): 2-d array of compartments
+    """
+    def __init__(self, num: int):
+        """ Creates a shelf
+        Args:
+            num(int): The shelf number
+        """
         self.num = num
         self.content = [[Compartment() for i in range(4)] for i in range(4)]
 
     def get_comp(self, code: str):
+        """Get compartment from the coordinate
+        Args:
+            code(str): Coordinate of compartment
+
+        Returns:
+            compartment(Compartment)
+        """
         row = ord(code[0]) - 65
         column = int(code[1]) - 1
         return self.content[row][column]
 
 
 class Compartment:
+    """Compartment class
+    Attributes:
+        prod(object): Product found in compartment
+    """
     def __init__(self):
         self.content = []
 
     def __str__(self):
-        return "content: {}".format(self.content)
+        return f"content: {self.content}"
 
-    def add(self, prod):
+    def add(self, prod: object):
         self.content.append(prod)
 
-    def remove(self, prod):
+    def remove(self, prod: object):
         self.content.remove(prod)
 
 
 class Product:
-    def __init__(self, name: str, image: str, category, code: int):
+    """Product class
+    Attributes:
+        name(str): Name of product
+        image(str): Picture of product
+        category(str): Category product falls into
+        code(int): Code of product
+
+    """
+    def __init__(self, name: str, image: str, category: str, code: int):
         self.name = name
         self.image = image
-        self.cat = category
+        self.cate = category
         self.code = code
 
     def __str__(self):
-        return "{}, {}, {}".format(self.name, self.cat, self.code)
+        return "{}, {}, {}".format(self.name, self.cate, self.code)
 
     def package(self, explosive: bool, fragile: bool, flammable: bool,
                 size: str):
         self.explosive = explosive
         self.fragile = fragile
-        self.flamable = flamable
+        self.flammable = flammable
         self.box_size = size
         self.dis = self.req.dis
         self.packaged = True
@@ -64,6 +92,7 @@ class Product:
         return explosive, fragile, flammable
 
     def check_box_size():
+        """Returns box size of the product"""
         size_num = int(input("Size Number"))
         size = shipping_box_size[size_num]
         return size
@@ -98,7 +127,7 @@ class Bin(Cart):
         self.packaged = True
 
     def send_to_truck(self, truck):
-        """Product send to truck"""
+        """Send product to truck"""
         for product in self.content:
             self.remove(product)
             truck.add(product)
