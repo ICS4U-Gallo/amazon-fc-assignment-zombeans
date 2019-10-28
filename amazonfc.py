@@ -1,4 +1,5 @@
 from typing import *
+import pickle
 
 prod_categories = ("automotive", "clothings", "electronics",
                    "home and kitchen", "industrial", "sports",
@@ -82,35 +83,44 @@ class Cart:
     def remove(self, item):
         self.content.remove(item)
 
-    def scan_prod_to_shelf(product, shelf_num, comp_code):
+    def scan_prod_to_shelf(self, shelf_num, comp_code):
         """Put Product in shelf/compartment"""
-        comp = storage[shelf_num-1].get_comp(comp_code)
-        comp.add(product)
+        for prod in self.content:
+            comp = storage[shelf_num-1].get_comp(comp_code)
+            comp.add(product)
+            self.content.remove(prod)
 
 
 class Bin(Cart):
     def __init__(self):
         super().__init__()
 
-    def package(req: Request):
+    def package(req: object):
         for prod in self.content:
             prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
 
-    def send_to_truck(self, truck):
+    def send_to_truck(self):
         """Product send to truck"""
-        for product in self.content:
-            self.remove(product)
-            truck.add(product)
+        for prod in self.content:
+            for truck in Truck.all_trucks:
+                if prod.dis == truck.type:
+                    truck.add(prod)
+                    self.remove(prod)
+                    break
 
 
 class Truck:
+    all_trucks = []
+
     def __init__(self, types):
         self.type = distance[types]
         self.content = []
+        Truck.all_trucks.append(self)
 
     def loading(self, prod):
-        self.content.append(prod)
+        if prod.dis == self.type:
+            self.content.append(prod)
 
     def leave(self):
         del self
@@ -140,7 +150,6 @@ class Request:
                     break
 
 
-#Ship In
 def scan_prod_to_trolly(trolly):
     """Create Product and put in trolly"""
     name = input("Prod Name: ")
@@ -148,14 +157,12 @@ def scan_prod_to_trolly(trolly):
     category = prod_categories[int(input("Category Number: "))]
     code = int(input("Prod Code: "))
     product = Product(name, image, category, code)
-    trolly.append(product)
+    trolly.add(product)
 
 
-#Ship Out
-def display_box_type():
+def display_box_type(prod):
     """Display shipping box type on screen"""
-    box_type = int(input("Enter type of box"))
-    print(box_type)
+    print(prod.box_size)
 
 
 def order_fulfillment(storage, bins):
@@ -188,6 +195,54 @@ def get_prod_from_shelf(shelf, prod_req_id, bins):
                     shelf.content[i][j].remove(prod)
 
 
-storage = [Shelf(i+1) for i in range(8)]
-trolly = Cart()
-bins = Cart()
+def save():
+    global storage
+    with open("amazonfcsave", "wb") as output:
+        pickle.dump(storage, output, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(Cart.all_carts, output, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(Truck.all_trucks, output, pickle.HIGHEST_PROTOCOL)
+
+
+def load():
+    global storage
+    with open("amazonfcsave", "rb") as input_:
+        storage = pickle.load(input_)
+        Cart.all_carts = pickle.load(input_)
+        Truck.all_trucks = pickle.load(input_)
+
+
+def ship_in(trolly):
+    while True:
+        input_ = input("a").upper()
+        if input_ == "":
+            break
+        elif input_ == "A":
+            scan_prod_to_trolly(trolly)
+        elif input_ == "B":
+            shelf_num = int(input("shelf num: "))
+            comp_cord = input("compartment cordinate: ")
+            trolly.scan_prod_to_shelf(shelf_num, comp_cord)
+
+
+def main():
+    global storage
+    storage = [Shelf(i+1) for i in range(8)]
+    trolly = Cart()
+    bins = Cart()
+    truck1 = Truck(0)
+    truck2 = Truck(1)
+    truck3 = Truck(2)
+    truck4 = Truck(3)
+    while True:
+        input_ = input("Hello World").upper()
+        if input_ == "A":
+            ship_in(trolly)
+        elif input_ == "S":
+            save()
+        elif input_ == "L":
+            load()
+
+
+if __name__ == "__main__":
+    main()
+
