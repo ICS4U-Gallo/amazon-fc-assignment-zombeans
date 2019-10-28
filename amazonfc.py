@@ -47,15 +47,15 @@ class Product:
                 size: str):
         self.explosive = explosive
         self.fragile = fragile
-        self.flamable = flamable
+        self.flammable = flammable
         self.box_size = size
-        self.dis = self.req.dis
         self.packaged = True
 
     def stamp_code(self, barcode):
         """Stamp barcode and address"""
         self.barcode = barcode
         self.address = self.req.address
+        self.dis = self.req.dis
 
     def check_danger():
         explosive = bool(input("Product explosive?(0 for no /1 for yes) "))
@@ -92,7 +92,7 @@ class Bin(Cart):
     def __init__(self):
         super().__init__()
 
-    def package(req: Request):
+    def package(req: object):
         for prod in self.content:
             prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
@@ -113,14 +113,14 @@ class Truck:
         self.content.append(prod)
 
     def leave(self):
-        del self
+        self.content = []
 
 
 class Request:
     prod_request = []
 
     def __init__(self, address, distance, prod_name, prod_code):
-        self.loc = address
+        self.address = address
         self.dis = distance
         self.prod_name = prod_name
         self.prod_code = prod_code
@@ -187,7 +187,7 @@ def get_prod_from_shelf(shelf, prod_req_id, bins):
                     bins.add(prod)
                     shelf.content[i][j].remove(prod)
 
-
-storage = [Shelf(i+1) for i in range(8)]
-trolly = Cart()
-bins = Cart()
+def main():
+    storage = [Shelf(i+1) for i in range(8)]
+    trolly = Cart()
+    bins = Cart()

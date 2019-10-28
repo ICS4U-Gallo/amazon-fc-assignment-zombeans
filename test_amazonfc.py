@@ -13,46 +13,29 @@ def test_can_create_product():
 
 def test_can_create_package():
         product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
-        package = product.package(True, False, True, "Small")
-        assert package.explosive == True
-        assert package.fragile == False
-        assert package.flammable == True
-        assert package.box_size == "Small"
-        assert package.packaged == True
+        product.package(True, False, True, "Small")
+        assert product.explosive == True
+        assert product.fragile == False
+        assert product.flammable == True
+        assert product.box_size == "Small"
+        assert product.packaged == True
 
 
 def test_can_create_stamp_code():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
-    stamp_code = product.stamp_code(ABC-abc-1234)
-    assert stamp_code.barcode == ABC-abc-1234
+    request = Request("somewhere", "short_distance", "Hair spray", 234567)
+    product.req = request
+    stamp_code = product.stamp_code("ABC-abc-1234")
+    assert product.barcode == "ABC-abc-1234"
+    assert product.address == "somewhere"
 
-def test_check_danger():
+def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
-    check_danger == product.check_danger()
-    check_danger.explosive = 1
-    check_danger.fragile = 0
-    check_danger.flammable = 1
-
-
-def test_check_box_size():
-    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
-    check_box_size = product.check_box_size()
-    
-
-def test_can_create_cart():
-    pass
-
-
-def test_add():
-    pass
-
-
-def test_remove():
-    pass
-
-
-def test_scan_prod_to_shelf():
-    pass
+    cart = Cart()
+    cart.add(product)
+    assert cart.content[0] == product
+    cart.remove(product)
+    assert len(cart.content) == 0
 
 
 def test_can_create_bin():
@@ -72,15 +55,22 @@ def test_can_create_truck():
 
 
 def test_loading():
-    pass
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+    truck = Truck(1)
+    truck.loading(product)
+    assert truck.content[0] == product
 
 
 def test_leave():
-    pass
+    truck = Truck(1)
+    truck.leave
+    assert len(truck.content) == 0
 
 
 def test_can_create_request():
-    pass
+    request = Request("123 pitbull street", "International", "chromebook", 123)
+    
+    
 
 
 def test_get_prod_id():
