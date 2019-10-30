@@ -5,7 +5,7 @@ prod_categories = ("automotive", "clothings", "electronics",
                    "home and kitchen", "industrial", "sports",
                    "tools", "toys and games")
 shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
-                     "24x24x24in", "oversize")
+                     "24x24x24in", "obese")
 distance = ("short_distance", "mid_range", "long_distance", "international")
 
 
@@ -78,13 +78,15 @@ class Product:
         self.fragile = fragile
         self.flammable = flammable
         self.box_size = size
-        self.dis = self.req.dis
         self.packaged = True
 
     def stamp_code(self, barcode):
         """Stamp barcode and address"""
-        self.barcode = barcode
-        self.address = self.req.address
+        if self.packaged:
+            self.barcode = barcode
+            self.address = self.req.address
+            self.dis = self.req.dis
+            self.stamped = True
 
     def check_danger():
         """Asks user if product is dangerous"""
@@ -95,7 +97,7 @@ class Product:
 
     def check_box_size():
         """Returns box size of the product"""
-        size_num = int(input("Size Number"))
+        size_num = int(input("Size Number: "))
         size = shipping_box_size[size_num]
         return size
 
@@ -113,6 +115,9 @@ class Cart:
     def __init__(self):
         self.content = []
         Cart.all_carts.append(self)
+
+    def __str__(self):
+        return "type: {}, # of item: {}".format(type(self), len(self.content))
 
     def add(self, item: object):
         """Add item to list"""
@@ -135,7 +140,7 @@ class Bin(Cart):
     def __init__(self):
         super().__init__()
 
-    def package():
+    def package(self):
         for prod in self.content:
             prod.package(prod.check_danger(), prod.check_box_size())
         self.packaged = True
@@ -143,11 +148,12 @@ class Bin(Cart):
     def send_to_truck(self):
         """Send product to truck"""
         for prod in self.content:
-            for truck in Truck.all_trucks:
-                if prod.dis == truck.type:
-                    truck.add(prod)
-                    self.remove(prod)
-                    break
+            if prod.stamped:
+                for truck in Truck.all_trucks:
+                    if prod.dis == truck.type:
+                        truck.add(prod)
+                        self.remove(prod)
+                        break
 
 
 class Truck:
@@ -163,12 +169,15 @@ class Truck:
         self.content = []
         Truck.all_trucks.append(self)
 
-    def loading(self, prod: object):
+    def __str__(self):
+        print("type: {}, # of item: {}").format(self.type, len(self.content))
+
+    def loading(self, prod):
         if prod.dis == self.type:
             self.content.append(prod)
 
     def leave(self):
-        del self
+        self.content = []
 
 
 class Request:
@@ -189,12 +198,18 @@ class Request:
         self.prod_code = prod_code
         Request.prod_request.append(self)
 
+    def __str__(self):
+        return "address: {}, distance: {}, product name: {}, product code: {}"\
+            .format(self.addr, self.dis, self.prod_name, self.prod_code)
+
+    @staticmethod
     def get_prod_id():
         id_list = []
         for req in prod_request:
             id_list.append(req.prod_code)
         return id_list
 
+    @staticmethod
     def link_prod(bins):
         for req in Request.prod_request:
             for prod in bins:
@@ -216,13 +231,6 @@ def scan_prod_to_trolly(trolly):
 def display_box_type(prod):
     """Display shipping box type on screen"""
     print(prod.box_size)
-
-
-def order_fulfillment(storage, bins):
-    for shelf in storage:
-        get_prod_from_shelf(shelf, Request.get_prod_id(), bins)
-    Request.link_prod(bins)
-    bins.package()
 
 
 def display_prod(product):
@@ -277,19 +285,90 @@ def ship_in(trolly):
             trolly.scan_prod_to_shelf(shelf_num, comp_cord)
 
 
+def order_fulfillment(storage, bins):
+    while True:
+        input_ = input("b").upper()
+        if input_ == "":
+            break
+        elif input_ == "A":
+            addr = input("address: ")
+            dis = distance[int(input("distance type code: "))]
+            prod_name = input("prod name: ")
+            prod_code = int(input("prod code: "))
+            Request(addr, dis, prod_name, prod_code)
+        elif input_ == "B":
+            for shelf in storage:
+                get_prod_from_shelf(shelf, Request.get_prod_id(), bins)
+            Request.link_prod(bins)
+        elif input_ == "C":
+            bins.package()
+
+
+def ship_out(bins):
+    while True:
+        input_ = input("c").upper()
+        if input_ == "":
+            break
+        elif input_ == "A":
+            for prod in bins:
+                prod.stamp_code()
+        elif input_ == "B":
+            bins.send_to_truck()
+        elif input_ == "C":
+            for truck in Truck.all_trucks:
+                truck.leave()
+
+
+def display(storage):
+    while True:
+        input_ = input("d").upper()
+        if input_ == "":
+            break
+        elif input_ == "A":
+            shelf_num = int(input())
+            comp_cord = input()
+            comp = storage[shelf_num-1].get_comp(comp_cord)
+            print("shelf:{} compartment:{}, content: ")\
+                .format(shelf_num, comp_cord)
+            for prod in comp:
+                print(prod)
+        elif input_ == "B":
+            print("All product request: ")
+            for req in Request.prod_request:
+                print(req)
+        elif input_ == "C":
+            for cart in Cart.all_carts:
+                print(cart)
+                for prod in cart.content:
+                    print(prod)
+                print()
+        elif input_ == "D":
+            for truck in Truck.all_trucks:
+                print(truck)
+                for prod in truck.content:
+                    print(prod)
+
+
 def main():
     global storage
     storage = [Shelf(i+1) for i in range(8)]
     trolly = Cart()
-    bins = Cart()
+    bins = Bin()
     truck1 = Truck(0)
     truck2 = Truck(1)
     truck3 = Truck(2)
     truck4 = Truck(3)
+    load()
     while True:
         input_ = input("Hello World").upper()
         if input_ == "A":
             ship_in(trolly)
+        elif input_ == "B":
+            order_fulfillment(storage, bins)
+        elif input_ == "C":
+            ship_out(bins)
+        elif input_ == "D":
+            display(stroage)
         elif input_ == "S":
             save()
         elif input_ == "L":
