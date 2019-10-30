@@ -29,20 +29,13 @@ def test_can_create_stamp_code():
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
 
-def test_can_create_cart():
-    pass
-
-
-def test_add():
-    pass
-
-
-def test_remove():
-    pass
-
-
-def test_scan_prod_to_shelf():
-    pass
+def test_can_use_cart():
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+    cart = Cart()
+    cart.add(product)
+    assert cart.content[0] == product
+    cart.remove(product)
+    assert len(cart.content) == 0
 
 
 def test_can_create_bin():
@@ -62,15 +55,20 @@ def test_can_create_truck():
 
 
 def test_loading():
-    pass
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+    truck = Truck(1)
+    truck.loading(product)
+    assert truck.content[0] == product
 
 
 def test_leave():
-    pass
+    truck = Truck(1)
+    truck.leave
+    assert len(truck.content) == 0
 
 
 def test_can_create_request():
-    pass
+    request = Request("123 pitbull street", "International", "chromebook", 123)
 
 
 def test_get_prod_id():
@@ -103,4 +101,3 @@ def test_get_prod_request():
 
 def test_get_prod_from_shelf():
     pass
-

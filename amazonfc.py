@@ -89,6 +89,7 @@ class Product:
             self.stamped = True
 
     def check_danger():
+        """Asks user if product is dangerous"""
         explosive = bool(input("Product explosive?(0 for no /1 for yes) "))
         fragile = bool(input("Product fragie?(0 for no /1 for yes) "))
         flammable = bool(input("Product flammable?(0 for no /1 for yes) "))
@@ -102,6 +103,13 @@ class Product:
 
 
 class Cart:
+    """Class to move product to shelf
+    Attributes:
+        item(object): The product
+        shelf_num(int): Shelf number product is stored in
+        comp_coor(str): Coordinate of product in shelf
+    """
+
     all_carts = []
 
     def __init__(self):
@@ -111,21 +119,24 @@ class Cart:
     def __str__(self):
         return "type: {}, # of item: {}".format(type(self), len(self.content))
 
-    def add(self, item):
+    def add(self, item: object):
+        """Add item to list"""
         self.content.append(item)
 
-    def remove(self, item):
+    def remove(self, item: object):
+        """Remove item from list"""
         self.content.remove(item)
 
-    def scan_prod_to_shelf(self, shelf_num, comp_code):
+    def scan_prod_to_shelf(self, shelf_num: int, comp_coor: str):
         """Put Product in shelf/compartment"""
         for prod in self.content:
-            comp = storage[shelf_num-1].get_comp(comp_code)
+            comp = storage[shelf_num-1].get_comp(comp_coor)
             comp.add(product)
             self.content.remove(prod)
 
 
 class Bin(Cart):
+    """Class for where products are packaged"""
     def __init__(self):
         super().__init__()
 
@@ -135,7 +146,7 @@ class Bin(Cart):
         self.packaged = True
 
     def send_to_truck(self):
-        """Product send to truck"""
+        """Send product to truck"""
         for prod in self.content:
             if prod.stamped:
                 for truck in Truck.all_trucks:
@@ -146,9 +157,14 @@ class Bin(Cart):
 
 
 class Truck:
+    """Class for dlivery truck
+    Attributes:
+        types(int): Gives you the type of truck
+        prod(object): Product that will be placed in truck
+    """
     all_trucks = []
 
-    def __init__(self, types):
+    def __init__(self, types: int):
         self.type = distance[types]
         self.content = []
         Truck.all_trucks.append(self)
@@ -165,9 +181,17 @@ class Truck:
 
 
 class Request:
+    """Class for when people request products
+    Attributes:
+        address(str): Address of person buying
+        distance(str): Type of truck needed
+        prod_name(str): Name of product
+        prod_code(int): Product code
+    """
     prod_request = []
 
-    def __init__(self, address, distance, prod_name, prod_code):
+    def __init__(self, address: str, distance: str, prod_name: str,
+                 prod_code: int):
         self.addr = address
         self.dis = distance
         self.prod_name = prod_name
