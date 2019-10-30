@@ -111,13 +111,16 @@ class Cart:
     """
 
     all_carts = []
+    id = 0
 
     def __init__(self):
         self.content = []
+        self.id = Cart.id
         Cart.all_carts.append(self)
+        Cart.id += 1
 
     def __str__(self):
-        return "type: {}, # of item: {}".format(type(self), len(self.content))
+        return "id: {}, # of item: {}".format(self.id, len(self.content))
 
     def add(self, item: object):
         """Add item to list"""
@@ -135,10 +138,28 @@ class Cart:
             self.content.remove(prod)
 
 
-class Bin(Cart):
+class Bin():
     """Class for where products are packaged"""
+
+    all_bins = []
+    id = 0
+
     def __init__(self):
-        super().__init__()
+        self.content = []
+        self.id = Bin.id
+        Bin.all_bins.append(self)
+        Bin.id += 1
+
+    def __str__(self):
+        return "id: {}, # of item: {}".format(self.id, len(self.content))
+
+    def add(self, item: object):
+        """Add item to list"""
+        self.content.append(item)
+
+    def remove(self, item: object):
+        """Remove item from list"""
+        self.content.remove(item)
 
     def package(self):
         for prod in self.content:
@@ -162,15 +183,20 @@ class Truck:
         types(int): Gives you the type of truck
         prod(object): Product that will be placed in truck
     """
+
     all_trucks = []
+    id = 0
 
     def __init__(self, types: int):
         self.type = distance[types]
         self.content = []
+        self.id = Truck.id
         Truck.all_trucks.append(self)
+        Truck.id += 1
 
     def __str__(self):
-        print("type: {}, # of item: {}").format(self.type, len(self.content))
+        return "id: {}, type: {}, # of item: {}"\
+            .format(self.id, self.type, len(self.content))
 
     def loading(self, prod):
         if prod.dis == self.type:
@@ -325,12 +351,12 @@ def display(storage):
         if input_ == "":
             break
         elif input_ == "A":
-            shelf_num = int(input())
-            comp_cord = input()
+            shelf_num = int(input("shelf num: "))
+            comp_cord = input("compartment cords: ").upper()
             comp = storage[shelf_num-1].get_comp(comp_cord)
-            print("shelf:{} compartment:{}, content: ")\
-                .format(shelf_num, comp_cord)
-            for prod in comp:
+            print("shelf:{} compartment:{}, content: ".format(shelf_num,
+                                                              comp_cord))
+            for prod in comp.content:
                 print(prod)
         elif input_ == "B":
             print("All product request: ")
@@ -347,6 +373,7 @@ def display(storage):
                 print(truck)
                 for prod in truck.content:
                     print(prod)
+                print()
 
 
 def main():
@@ -358,7 +385,6 @@ def main():
     truck2 = Truck(1)
     truck3 = Truck(2)
     truck4 = Truck(3)
-    load()
     while True:
         input_ = input("Hello World").upper()
         if input_ == "A":
@@ -368,7 +394,7 @@ def main():
         elif input_ == "C":
             ship_out(bins)
         elif input_ == "D":
-            display(stroage)
+            display(storage)
         elif input_ == "S":
             save()
         elif input_ == "L":
