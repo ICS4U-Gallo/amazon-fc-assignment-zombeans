@@ -1,7 +1,9 @@
 from amazonfc import *
 
+
 def test_can_create_shelf():
     pass
+
 
 def test_can_create_product():
     product = Product("Baby powder", "babypowder.png", "Health & Personal Care", 123456)
@@ -12,13 +14,13 @@ def test_can_create_product():
 
 
 def test_can_create_package():
-        product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
-        product.package(True, False, True, "Small")
-        assert product.explosive == True
-        assert product.fragile == False
-        assert product.flammable == True
-        assert product.box_size == "Small"
-        assert product.packaged == True
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+    product.package(True, False, True, "Small")
+    assert product.explosive is True
+    assert product.fragile is False
+    assert product.flammable is True
+    assert product.box_size == "Small"
+    assert product.packaged is True
 
 
 def test_can_create_stamp_code():
@@ -28,6 +30,7 @@ def test_can_create_stamp_code():
     stamp_code = product.stamp_code("ABC-abc-1234")
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
+
 
 def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
@@ -69,8 +72,6 @@ def test_leave():
 
 def test_can_create_request():
     request = Request("123 pitbull street", "International", "chromebook", 123)
-    
-    
 
 
 def test_get_prod_id():
