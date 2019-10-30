@@ -218,7 +218,7 @@ class Request:
 
     def __init__(self, address: str, distance: str, prod_name: str,
                  prod_code: int):
-        self.addr = address
+        self.address = address
         self.dis = distance
         self.prod_name = prod_name
         self.prod_code = prod_code
