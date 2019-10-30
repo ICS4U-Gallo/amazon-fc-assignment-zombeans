@@ -69,8 +69,6 @@ def test_leave():
 
 def test_can_create_request():
     request = Request("123 pitbull street", "International", "chromebook", 123)
-    
-    
 
 
 def test_get_prod_id():
@@ -103,4 +101,3 @@ def test_get_prod_request():
 
 def test_get_prod_from_shelf():
     pass
-
