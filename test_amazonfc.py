@@ -104,4 +104,3 @@ def test_get_prod_request():
 
 def test_get_prod_from_shelf():
     pass
-
