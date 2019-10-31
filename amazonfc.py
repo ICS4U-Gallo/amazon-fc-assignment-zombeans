@@ -90,9 +90,9 @@ class Product:
 
     def check_danger():
         """Asks user if product is dangerous"""
-        explosive = bool(input("Product explosive?(0 for no /1 for yes) "))
-        fragile = bool(input("Product fragie?(0 for no /1 for yes) "))
-        flammable = bool(input("Product flammable?(0 for no /1 for yes) "))
+        explosive = bool(input("Is the product explosive?(0 for no /1 for yes) \n"))
+        fragile = bool(input("Is the product fragie?(0 for no /1 for yes) \n"))
+        flammable = bool(input("Is the product flammable?(0 for no /1 for yes) \n"))
         return explosive, fragile, flammable
 
     def check_box_size():
@@ -231,14 +231,14 @@ class Request:
     @staticmethod
     def get_prod_id():
         id_list = []
-        for req in prod_request:
+        for req in Request.prod_request:
             id_list.append(req.prod_code)
         return id_list
 
     @staticmethod
     def link_prod(bins):
         for req in Request.prod_request:
-            for prod in bins:
+            for prod in bins.content:
                 if prod.code == req.prod_code:
                     prod.req = req
                     break
@@ -246,10 +246,10 @@ class Request:
 
 def scan_prod_to_trolly(trolly):
     """Create Product and put in trolly"""
-    name = input("Prod Name: ")
+    name = input("Product Name: ")
     image = input("Image: ")
     category = prod_categories[int(input("Category Number: "))]
-    code = int(input("Prod Code: "))
+    code = int(input("Product Code: "))
     product = Product(name, image, category, code)
     trolly.add(product)
 
@@ -266,9 +266,9 @@ def display_prod(product):
 
 def get_prod_request():
     loc = input("Location: ")
-    dis = distance[int(input("Distance Type: "))]
-    prod_name = input("Prod Name: ")
-    prod_code = input("Prod Code: ")
+    dis = distance[int(input("Distance Type(0, 1, 2, 3): \n"))]
+    prod_name = input("Product Name: ")
+    prod_code = input("Product Code: ")
     request = Request(loc, dis, prod_name, prod_code)
 
 
@@ -276,7 +276,7 @@ def get_prod_from_shelf(shelf, prod_req_id, bins):
     """Scan product to bin from shelf"""
     for i in range(len(shelf.content)):
         for j in range(len(shelf.content[i])):
-            for prod in shelf.content[i][j]:
+            for prod in shelf.content[i][j].content:
                 if prod.code in prod_req_id:
                     bins.add(prod)
                     shelf.content[i][j].remove(prod)
@@ -300,27 +300,31 @@ def load():
 
 def ship_in(trolly):
     while True:
-        input_ = input("a").upper()
+        input_ = input("Input 'a' to create product and place in trolly."
+                       "\nInput 'b' to place product in shelf.\n").upper()
         if input_ == "":
             break
         elif input_ == "A":
             scan_prod_to_trolly(trolly)
         elif input_ == "B":
-            shelf_num = int(input("shelf num: "))
-            comp_cord = input("compartment cordinate: ")
+            shelf_num = int(input("Input shelf num: "))
+            comp_cord = input("Input compartment coordinates: ")
             trolly.scan_prod_to_shelf(shelf_num, comp_cord)
 
 
 def order_fulfillment(storage, bins):
     while True:
-        input_ = input("b").upper()
+        input_ = input("Input 'a' to create product and its destination."
+                       "\nInput 'b' to move product from shelf into bins."
+                       "\nInput 'c' to package product.\n").upper()
         if input_ == "":
             break
         elif input_ == "A":
-            addr = input("address: ")
-            dis = distance[int(input("distance type code: "))]
-            prod_name = input("prod name: ")
-            prod_code = int(input("prod code: "))
+            addr = input("Input address: ")
+            dis = distance[int(input("Input distance type code"
+                                     "(0, 1, 2, or 3): "))]
+            prod_name = input("Input products name: ")
+            prod_code = int(input("Input products code(must be a number): "))
             Request(addr, dis, prod_name, prod_code)
         elif input_ == "B":
             for shelf in storage:
@@ -332,34 +336,41 @@ def order_fulfillment(storage, bins):
 
 def ship_out(bins):
     while True:
-        input_ = input("c").upper()
+        input_ = input("Input 'a' to enter code of product."
+                       "\nInput 'b' to send bin to truck."
+                       "\n Input 'c' to send truck to destination.\n").upper()
         if input_ == "":
             break
         elif input_ == "A":
             for prod in bins:
-                prod.stamp_code()
+                code = input("Enter code of product: ")  
+                prod.stamp_code(code)
         elif input_ == "B":
             bins.send_to_truck()
         elif input_ == "C":
             for truck in Truck.all_trucks:
+                print("Truck has left.")
                 truck.leave()
 
 
 def display(storage):
     while True:
-        input_ = input("d").upper()
+        input_ = input("Input 'a' to show which items are in which shelf."
+                       "\nInput 'b' to show all requested products."
+                       "\nInput 'c' to show products in cart."
+                       "\nInput 'd' to print items in truck.\n").upper()
         if input_ == "":
             break
         elif input_ == "A":
-            shelf_num = int(input("shelf num: "))
-            comp_cord = input("compartment cords: ").upper()
+            shelf_num = int(input("Input shelf number: "))
+            comp_cord = input("Input compartment coordinates: ").upper()
             comp = storage[shelf_num-1].get_comp(comp_cord)
             print("shelf:{} compartment:{}, content: ".format(shelf_num,
                                                               comp_cord))
             for prod in comp.content:
                 print(prod)
         elif input_ == "B":
-            print("All product request: ")
+            print("All products requested: ")
             for req in Request.prod_request:
                 print(req)
         elif input_ == "C":
@@ -386,11 +397,14 @@ def main():
     truck3 = Truck(2)
     truck4 = Truck(3)
     while True:
-        input_ = input("Hello World").upper()
+        input_ = input("Input 'A' to place your order. \nInput 'B' to "
+                       "place item in shelf. \nInput 'c' to send product out."
+                       "\nInput 'd' to display storage. \nInput 's' to"
+                       "save. \nInput 'l' to load.\n").upper()
         if input_ == "A":
-            ship_in(trolly)
-        elif input_ == "B":
             order_fulfillment(storage, bins)
+        elif input_ == "B":
+            ship_in(trolly)
         elif input_ == "C":
             ship_out(bins)
         elif input_ == "D":
