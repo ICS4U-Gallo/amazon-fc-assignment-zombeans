@@ -1,6 +1,9 @@
 from amazonfc import *
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1acec3f596fe459c9a682b0e202416bc74cdb2b5
 def test_can_create_product():
     product = Product("Baby powder", "babypowder.png", "Health & Personal Care"
                       ", 123456")
@@ -21,10 +24,16 @@ def test_can_create_product():
     assert product.cate == "Health & Personal Care"
     assert product.code == 123556
 
+<<<<<<< HEAD
 
 def test_can_create_package():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care"
                       ", 234567")
+=======
+    
+def test_can_create_package():
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+>>>>>>> 1acec3f596fe459c9a682b0e202416bc74cdb2b5
     product.package(True, False, True, "Small")
     assert product.explosive == True
     assert product.fragile == False
@@ -38,10 +47,16 @@ def test_can_create_package():
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
 
+<<<<<<< HEAD
 
 def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care"
                       ", 234567")
+=======
+    
+def test_can_use_cart():
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+>>>>>>> 1acec3f596fe459c9a682b0e202416bc74cdb2b5
     cart = Cart()
     cart.add(product)
     assert cart.content[0] == product
@@ -54,20 +69,32 @@ def test_can_create_bin():
     assert bin_1.content == []
     assert bin_1.id == 0
   
+<<<<<<< HEAD
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care"
                       ", 234567")
+=======
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+>>>>>>> 1acec3f596fe459c9a682b0e202416bc74cdb2b5
     bin_1.add(product)
     assert bin_1.content[0] == product
 
     bin_1.remove(product)
     assert bin_1.content == []
 
+<<<<<<< HEAD
 
 def test_compartment():
     compartment = Compartment()
     assert compartment.content == []
     prod = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care"
                    ", 234567")
+=======
+    
+def test_compartment():
+    compartment = Compartment()
+    assert compartment.content == []
+    prod = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+>>>>>>> 1acec3f596fe459c9a682b0e202416bc74cdb2b5
 
     compartment.add(prod)
     assert compartment.content[0] == prod
