@@ -1,7 +1,14 @@
 from amazonfc import *
 
 def test_can_create_shelf():
-    pass
+    shelf = Shelf(1)
+    assert shelf.num == 1
+
+    shelf = Shelf(2)
+    assert shelf.num == 2
+
+    shelf = shelf(35)
+    assert shelf.num == 35
 
 def test_can_create_product():
     product = Product("Baby powder", "babypowder.png", "Health & Personal Care", 123456)
@@ -9,6 +16,20 @@ def test_can_create_product():
     assert product.image == "babypowder.png"
     assert product.cate == "Health & Personal Care"
     assert product.code == 123456
+
+    product = Product("chromebook", "chromebook.png", "Electronics", 123457)
+    assert product.name == "chromebook"
+    assert product.image == "chromebook.png"
+    assert product.cate == "Electronics"
+    assert product.code == 123457
+
+    product = Product("Lotion", "lotion.png", "Health & Personal Care", 123556)
+    assert product.name == "Lotion"
+    assert product.image == "lotion.png"
+    assert product.cate == "Health & Personal Care"
+    assert product.code == 123556
+
+
 
 
 def test_can_create_package():
@@ -43,18 +64,37 @@ def test_can_create_bin():
     assert bin_1.content == []
     assert bin_1.id == 0
   
-    assert bin_1.add() == 
+    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+    bin_1.add(product)
+    assert bin_1.content == product
+
+    bin_1.remove(product)
+    assert bin_1.remove == []
 
 def test_compartment():
-        pass
+    compartment = Compartment()
+    assert compartment.content == []
+    prod = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
+
+    compartment.add(prod)
+    assert content == ["Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567]
+
+    compartment.remove(prod)
+    assert content == []
+
+
 
 def test_truck():
-    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     truck = Truck(1)
+    assert truck.content == []
+    assert truck.type == 1
+    assert truck.id == 1
+    assert truck.all_trucks == [1]
+
+    product = Request("1234 sesame street", "1", "table", 444)
     truck.loading(product)
     assert truck.content[0] == product
 
-    truck = Truck(1)
     truck.leave
     assert len(truck.content) == 0
 
