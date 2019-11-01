@@ -5,7 +5,7 @@ prod_categories = ("automotive", "clothings", "electronics",
                    "home and kitchen", "industrial", "sports",
                    "tools", "toys and games")
 shipping_box_size = ("12x12x12in", "16x16x16in", "18x18x18in", "22x22x22in",
-                     "24x24x24in", "obese")
+                     "24x24x24in", "oversize")
 distance = ("short_distance", "mid_range", "long_distance", "international")
 
 
@@ -72,11 +72,10 @@ class Product:
     def __str__(self):
         return "{}, {}, {}".format(self.name, self.cate, self.code)
 
-    def package(self, explosive: bool, fragile: bool, flammable: bool,
-                size: str):
-        self.explosive = explosive
-        self.fragile = fragile
-        self.flammable = flammable
+    def package(self, dangers: list, size: str):
+        self.explosive = dangers[0]
+        self.fragile = dangers[1]
+        self.flammable = dangers[2]
         self.box_size = size
         self.packaged = True
 
@@ -95,11 +94,11 @@ class Product:
         fragile = bool(input("Is the product fragie?(0 for no /1 for yes) \n"))
         flammable = bool(input("Is the product flammable?(0 for no"
                                "/1 for yes) \n"))
-        return explosive, fragile, flammable
+        return [explosive, fragile, flammable]
 
     def check_box_size():
         """Returns box size of the product"""
-        size_num = int(input("Size Number: "))
+        size_num = int(input("Size Number(0-5): "))
         size = shipping_box_size[size_num]
         return size
 
@@ -136,7 +135,7 @@ class Cart:
         """Put Product in shelf/compartment"""
         for prod in self.content:
             comp = storage[shelf_num-1].get_comp(comp_coor)
-            comp.add(product)
+            comp.add(prod)
             self.content.remove(prod)
 
 
@@ -165,7 +164,8 @@ class Bin():
 
     def package(self):
         for prod in self.content:
-            prod.package(prod.check_danger(), prod.check_box_size())
+            print(prod)
+            prod.package(Product.check_danger(), Product.check_box_size())
         self.packaged = True
 
     def send_to_truck(self):
@@ -205,6 +205,8 @@ class Truck:
             self.content.append(prod)
 
     def leave(self):
+        for prod in self.content:
+            Request.prod_request.remove(prod.req)
         self.content = []
 
 
@@ -228,7 +230,7 @@ class Request:
 
     def __str__(self):
         return "address: {}, distance: {}, product name: {}, product code: {}"\
-            .format(self.addr, self.dis, self.prod_name, self.prod_code)
+            .format(self.address, self.dis, self.prod_name, self.prod_code)
 
     @staticmethod
     def get_prod_id():
@@ -316,7 +318,7 @@ def ship_in(trolly):
 
 def order_fulfillment(storage, bins):
     while True:
-        input_ = input("Input 'a' to create product and its destination."
+        input_ = input("Input 'a' to create request and its destination."
                        "\nInput 'b' to move product from shelf into bins."
                        "\nInput 'c' to package product.\n").upper()
         if input_ == "":
@@ -338,13 +340,14 @@ def order_fulfillment(storage, bins):
 
 def ship_out(bins):
     while True:
-        input_ = input("Input 'a' to enter code of product."
+        input_ = input("Input 'a' to stamp code on product."
                        "\nInput 'b' to send bin to truck."
-                       "\n Input 'c' to send truck to destination.\n").upper()
+                       "\nInput 'c' to send truck to destination.\n").upper()
         if input_ == "":
             break
         elif input_ == "A":
-            for prod in bins:
+            for prod in bins.content:
+                print(prod)
                 code = input("Enter code of product: ")
                 prod.stamp_code(code)
         elif input_ == "B":
@@ -399,7 +402,7 @@ def main():
     truck3 = Truck(2)
     truck4 = Truck(3)
     while True:
-        input_ = input("Input 'A' to manage ship in. \n"
+        input_ = input("\nInput 'A' to manage ship in. \n"
                        "Input 'B' to manage product with request.\n"
                        "Input 'C' to send product out."
                        "\nInput 'D' to display storage. \nInput 'S' to "
