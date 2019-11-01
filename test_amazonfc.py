@@ -19,9 +19,7 @@ def test_can_create_product():
     assert product.cate == "Health & Personal Care"
     assert product.code == 123556
 
-
-
-
+    
 def test_can_create_package():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     product.package(True, False, True, "Small")
@@ -37,6 +35,7 @@ def test_can_create_package():
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
 
+    
 def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     cart = Cart()
@@ -58,6 +57,7 @@ def test_can_create_bin():
     bin_1.remove(product)
     assert bin_1.content == []
 
+    
 def test_compartment():
     compartment = Compartment()
     assert compartment.content == []
@@ -68,7 +68,6 @@ def test_compartment():
 
     compartment.remove(prod)
     assert compartment.content == []
-
 
 
 def test_truck():
