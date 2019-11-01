@@ -250,7 +250,7 @@ def scan_prod_to_trolly(trolly):
     """Create Product and put in trolly"""
     name = input("Product Name: ")
     image = input("Image: ")
-    category = prod_categories[int(input("Category Number: "))]
+    category = prod_categories[int(input("Category Number(0-7): "))]
     code = int(input("Product Code: "))
     product = Product(name, image, category, code)
     trolly.add(product)
@@ -399,14 +399,15 @@ def main():
     truck3 = Truck(2)
     truck4 = Truck(3)
     while True:
-        input_ = input("Input 'A' to place your order. \nInput 'B' to "
-                       "place item in shelf. \nInput 'c' to send product out."
-                       "\nInput 'd' to display storage. \nInput 's' to"
-                       "save. \nInput 'l' to load.\n").upper()
+        input_ = input("Input 'A' to manage ship in. \n"
+                       "Input 'B' to manage product with request.\n"
+                       "Input 'C' to send product out."
+                       "\nInput 'D' to display storage. \nInput 'S' to "
+                       "save. \nInput 'L' to load.\n").upper()
         if input_ == "A":
-            order_fulfillment(storage, bins)
-        elif input_ == "B":
             ship_in(trolly)
+        elif input_ == "B":
+            order_fulfillment(storage, bins)
         elif input_ == "C":
             ship_out(bins)
         elif input_ == "D":
