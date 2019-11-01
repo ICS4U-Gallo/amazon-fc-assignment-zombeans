@@ -1,5 +1,6 @@
 from amazonfc import *
 
+
 def test_can_create_shelf():
     shelf = Shelf(1)
     assert shelf.num == 1
@@ -9,6 +10,7 @@ def test_can_create_shelf():
 
     shelf = shelf(35)
     assert shelf.num == 35
+
 
 def test_can_create_product():
     product = Product("Baby powder", "babypowder.png", "Health & Personal Care", 123456)
@@ -30,8 +32,6 @@ def test_can_create_product():
     assert product.code == 123556
 
 
-
-
 def test_can_create_package():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     product.package(True, False, True, "Small")
@@ -49,6 +49,7 @@ def test_can_create_stamp_code():
     stamp_code = product.stamp_code("ABC-abc-1234")
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
+
 
 def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
@@ -71,6 +72,7 @@ def test_can_create_bin():
     bin_1.remove(product)
     assert bin_1.remove == []
 
+
 def test_compartment():
     compartment = Compartment()
     assert compartment.content == []
@@ -81,7 +83,6 @@ def test_compartment():
 
     compartment.remove(prod)
     assert content == []
-
 
 
 def test_truck():

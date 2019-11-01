@@ -90,9 +90,11 @@ class Product:
 
     def check_danger():
         """Asks user if product is dangerous"""
-        explosive = bool(input("Is the product explosive?(0 for no /1 for yes) \n"))
+        explosive = bool(input("Is the product explosive?(0 for no"
+                               "/1 for yes) \n"))
         fragile = bool(input("Is the product fragie?(0 for no /1 for yes) \n"))
-        flammable = bool(input("Is the product flammable?(0 for no /1 for yes) \n"))
+        flammable = bool(input("Is the product flammable?(0 for no"
+                               "/1 for yes) \n"))
         return explosive, fragile, flammable
 
     def check_box_size():
@@ -343,7 +345,7 @@ def ship_out(bins):
             break
         elif input_ == "A":
             for prod in bins:
-                code = input("Enter code of product: ")  
+                code = input("Enter code of product: ")
                 prod.stamp_code(code)
         elif input_ == "B":
             bins.send_to_truck()
