@@ -79,10 +79,10 @@ class Product:
         self.box_size = size
         self.packaged = True
 
-    def stamp_code(self, barcode):
+    def stamp_code(self):
         """Stamp barcode and address"""
         if self.packaged:
-            self.barcode = barcode
+            self.barcode = self.code
             self.address = self.req.address
             self.dis = self.req.dis
             self.stamped = True
@@ -174,7 +174,7 @@ class Bin():
             if prod.stamped:
                 for truck in Truck.all_trucks:
                     if prod.dis == truck.type:
-                        truck.add(prod)
+                        truck.loading(prod)
                         self.remove(prod)
                         break
 
@@ -205,8 +205,6 @@ class Truck:
             self.content.append(prod)
 
     def leave(self):
-        for prod in self.content:
-            Request.prod_request.remove(prod.req)
         self.content = []
 
 
@@ -245,6 +243,7 @@ class Request:
             for prod in bins.content:
                 if prod.code == req.prod_code:
                     prod.req = req
+                    Request.prod_request.remove(req)
                     break
 
 
@@ -292,6 +291,8 @@ def save():
         pickle.dump(storage, output, pickle.HIGHEST_PROTOCOL)
         pickle.dump(Cart.all_carts, output, pickle.HIGHEST_PROTOCOL)
         pickle.dump(Truck.all_trucks, output, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(Request.prod_request, output, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(Bin.all_bins, output, pickle.HIGHEST_PROTOCOL)
 
 
 def load():
@@ -300,6 +301,8 @@ def load():
         storage = pickle.load(input_)
         Cart.all_carts = pickle.load(input_)
         Truck.all_trucks = pickle.load(input_)
+        Request.prod_request = pickle.load(input_)
+        Bin.all_bins = pickle.load(input_)
 
 
 def ship_in(trolly):
@@ -347,9 +350,7 @@ def ship_out(bins):
             break
         elif input_ == "A":
             for prod in bins.content:
-                print(prod)
-                code = input("Enter code of product: ")
-                prod.stamp_code(code)
+                prod.stamp_code()
         elif input_ == "B":
             bins.send_to_truck()
         elif input_ == "C":
@@ -363,7 +364,8 @@ def display(storage):
         input_ = input("Input 'a' to show which items are in which shelf."
                        "\nInput 'b' to show all requested products."
                        "\nInput 'c' to show products in cart."
-                       "\nInput 'd' to print items in truck.\n").upper()
+                       "\nInput 'd' to print items in truck."
+                       "\nInput 'e' to print items in bins").upper()
         if input_ == "":
             break
         elif input_ == "A":
@@ -390,17 +392,17 @@ def display(storage):
                 for prod in truck.content:
                     print(prod)
                 print()
+        elif input_ == "E":
+            for bins in Bin.all_bins:
+                print(bins)
+                for prod in bins.content:
+                    print(prod)
+                print()
 
 
 def main():
     global storage
-    storage = [Shelf(i+1) for i in range(8)]
-    trolly = Cart()
-    bins = Bin()
-    truck1 = Truck(0)
-    truck2 = Truck(1)
-    truck3 = Truck(2)
-    truck4 = Truck(3)
+    load()
     while True:
         input_ = input("\nInput 'A' to manage ship in. \n"
                        "Input 'B' to manage product with request.\n"
@@ -408,11 +410,11 @@ def main():
                        "\nInput 'D' to display storage. \nInput 'S' to "
                        "save. \nInput 'L' to load.\n").upper()
         if input_ == "A":
-            ship_in(trolly)
+            ship_in(Cart.all_carts[0])
         elif input_ == "B":
-            order_fulfillment(storage, bins)
+            order_fulfillment(storage, Bin.all_bins[0])
         elif input_ == "C":
-            ship_out(bins)
+            ship_out(Bin.all_bins[0])
         elif input_ == "D":
             display(storage)
         elif input_ == "S":
