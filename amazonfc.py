@@ -45,7 +45,7 @@ class Compartment:
         self.content = []
 
     def __str__(self):
-        return f"content: {self.content}"
+        return "content: {}".format(self.content)
 
     def add(self, prod: object):
         self.content.append(prod)
