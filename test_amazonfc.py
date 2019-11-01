@@ -1,17 +1,5 @@
 from amazonfc import *
 
-
-def test_can_create_shelf():
-    shelf = Shelf(1)
-    assert shelf.num == 1
-
-    shelf = Shelf(2)
-    assert shelf.num == 2
-
-    shelf = shelf(35)
-    assert shelf.num == 35
-
-
 def test_can_create_product():
     product = Product("Baby powder", "babypowder.png", "Health & Personal Care", 123456)
     assert product.name == "Baby powder"
@@ -32,6 +20,8 @@ def test_can_create_product():
     assert product.code == 123556
 
 
+
+
 def test_can_create_package():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     product.package(True, False, True, "Small")
@@ -41,15 +31,11 @@ def test_can_create_package():
     assert product.box_size == "Small"
     assert product.packaged == True
 
-
-def test_can_create_stamp_code():
-    product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     request = Request("somewhere", "short_distance", "Hair spray", 234567)
     product.req = request
     stamp_code = product.stamp_code("ABC-abc-1234")
     assert product.barcode == "ABC-abc-1234"
     assert product.address == "somewhere"
-
 
 def test_can_use_cart():
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
@@ -67,11 +53,10 @@ def test_can_create_bin():
   
     product = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
     bin_1.add(product)
-    assert bin_1.content == product
+    assert bin_1.content[0] == product
 
     bin_1.remove(product)
-    assert bin_1.remove == []
-
+    assert bin_1.content == []
 
 def test_compartment():
     compartment = Compartment()
@@ -79,25 +64,25 @@ def test_compartment():
     prod = Product("Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567)
 
     compartment.add(prod)
-    assert content == ["Hair spray", "hair_spray.png", "Beauty & Personal Care", 234567]
+    assert compartment.content[0] == prod
 
     compartment.remove(prod)
-    assert content == []
+    assert compartment.content == []
+
 
 
 def test_truck():
     truck = Truck(1)
     assert truck.content == []
-    assert truck.type == 1
-    assert truck.id == 1
-    assert truck.all_trucks == [1]
+    assert truck.type == "mid_range"
+    assert truck.id == 0
 
-    product = Request("1234 sesame street", "1", "table", 444)
+    product = Request("1234 sesame street", "mid_range", "table", 444)
     truck.loading(product)
     assert truck.content[0] == product
 
-    truck.leave
-    assert len(truck.content) == 0
+    truck.leave()
+    assert truck.content == []
 
 
 def test_request():
